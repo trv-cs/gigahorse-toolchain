@@ -227,7 +227,6 @@ Analytics_MissingJumpTargetSomeCtx(block):-
   !global.BlockJumpValidTarget(ctx, block, _, _),
   postTrans.JUMPDEST(_). // if there are not valid jumpdests then don't flag
 
-
 // Sanity checking for functions
 .decl Analytics_InexactFunctionArguments(func: IRFunction)
 .decl Analytics_InexactFunctionReturnArguments(func: IRFunction)

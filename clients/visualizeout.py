@@ -18,8 +18,8 @@ def emit(s: str, out: TextIO, indent: int=0):
 
 def emit_stmt(stmt: Statement, out: TextIO):
     def render_var(var: str):
-        if var in tac_variable_value:
-            return f"v{var.replace('0x', '')}({tac_variable_value[var]})"
+        if var in variable_value:
+            return f"v{var.replace('0x', '')}({variable_value[var]})"
         else:
             return f"v{var.replace('0x', '')}"
 
@@ -63,8 +63,8 @@ def pretty_print_tac(functions: Mapping[str, Function], out: TextIO):
 
 
 def main():
-    global tac_variable_value
-    tac_variable_value = load_csv_map('TAC_Variable_Value.csv')
+    global variable_value
+    variable_value = load_csv_map('Variable_Value.csv')
 
     _, functions,  = construct_cfg()
 

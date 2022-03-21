@@ -42,7 +42,7 @@ def construct_cfg() -> Tuple[Mapping[str, Block], Mapping[str, Function]]:
     # Load facts
     tac_function_blocks = load_csv_multimap('InFunction.csv', reverse=True)
 
-    tac_func_id_to_public = load_csv_map('PublicFunction.csv')
+    tac_func_id_to_public = load_csv_map('PublicFunctionSelector.csv')
     tac_high_level_func_name = load_csv_map('HighLevelFunctionName.csv')
 
     tac_formal_args: Mapping[str, List[Tuple[str, int]]] = defaultdict(list)
@@ -56,16 +56,16 @@ def construct_cfg() -> Tuple[Mapping[str, Block], Mapping[str, Function]]:
             tac_block_function[block] = func_id
 
 
-    tac_block_stmts = load_csv_multimap('TAC_Block.csv', reverse=True)
-    tac_op = load_csv_map('TAC_Op.csv')
+    tac_block_stmts = load_csv_multimap('Statement_Block.csv', reverse=True)
+    tac_op = load_csv_map('Statement_Opcode.csv')
 
     # Load statement defs/uses
     tac_defs: Mapping[str, List[Tuple[str, int]]] = defaultdict(list)
-    for stmt_id, var, pos in load_csv('TAC_Def.csv'):
+    for stmt_id, var, pos in load_csv('Statement_Defines.csv'):
         tac_defs[stmt_id].append((var, int(pos)))
 
     tac_uses: Mapping[str, List[Tuple[str, int]]] = defaultdict(list)
-    for stmt_id, var, pos in load_csv('TAC_Use.csv'):
+    for stmt_id, var, pos in load_csv('Statement_Uses.csv'):
         tac_uses[stmt_id].append((var, int(pos)))
 
     # Load block edges
@@ -100,7 +100,7 @@ def construct_cfg() -> Tuple[Mapping[str, Block], Mapping[str, Function]]:
         block.successors   = [blocks[succ] for succ in tac_block_succ[block.ident]]
 
     functions: Mapping[str, Function] = {}
-    for block_id, in load_csv('IRFunctionEntry.csv'):
+    for block_id, in load_csv('FunctionEntry.csv'):
         func_id = tac_block_function[block_id]
 
         high_level_name = 'fallback()' if tac_func_id_to_public.get(func_id, '_') == '0x0' else tac_high_level_func_name[func_id]

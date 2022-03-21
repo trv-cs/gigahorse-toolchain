@@ -5,11 +5,14 @@
 .type TACVariable <: symbol
 
 .output ByteCodeHex(IO="file", filename="bytecode.hex")
+.output ByteCodeHex(IO="file", filename="ByteCodeHex.hex")
+.output ByteCodeHex(IO="file", filename="_ByteCodeHex.hex")
 
 // useful intermediate outputs
 .output OpcodePossiblyHalts
 .output IRBlockEdge
 .output IRPublicFunction(IO="file", filename = "PublicFunction.csv", delimiter = "\t")
+.output IRPublicFunction(IO="file", filename = "PublicFunctionSelector.csv", delimiter = "\t")
 .output Statement_IRStatement
 .output CycleEntry
 
@@ -40,23 +43,24 @@ PHILocation(block, stackIndex, cat(cat(block, "_"), stackIndexHex)) :-
 
 // Final decompiler outputs
 .decl TAC_Op(stmt:IRStatement, op:Opcode)
-.output TAC_Op
+.output TAC_Op(IO="file", filename="Statement_Opcode.csv", delimiter="\t")
 .decl TAC_Stmt(stmt:IRStatement)
-.output TAC_Stmt
+.output TAC_Stmt(IO="file", filename="IsStatement.csv", delimiter="\t")
 .decl TAC_Use(stmt: IRStatement, var: TACVariable, i: number)
-.output TAC_Use
+.output TAC_Use(IO="file", filename="Statement_Uses.csv", delimiter="\t")
 .decl TAC_Def(stmt: IRStatement, var: TACVariable, n: number)
-.output TAC_Def
+.output TAC_Def(IO="file", filename="Statement_Defines.csv", delimiter="\t")
 .decl TAC_Var(var: TACVariable)
 .output TAC_Var
 .decl TAC_Block(stmt: IRStatement, block: IRBlock)
-.output TAC_Block
+.output TAC_Block(IO="file", filename="Statement_Block.csv", delimiter="\t")
 .decl TAC_Block_Head(block: IRBlock, stmt: IRStatement)
 .output TAC_Block_Head
 .decl TAC_Variable_Value(var: TACVariable, value: symbol)
-.output TAC_Variable_Value
+.output TAC_Variable_Value(IO="file", filename="Variable_Value.csv", delimiter="\t")
+.output TAC_Variable_Value(IO="file", filename="BasicVariable_Value.csv", delimiter="\t")
 .decl TAC_Variable_BlockValue(var: TACVariable, value: symbol)
-.output TAC_Variable_BlockValue
+.output TAC_Variable_BlockValue(IO="file", filename="Variable_BlockValue.csv", delimiter="\t")
 
 
 // Storage snapshot relations
@@ -218,10 +222,10 @@ TAC_Block(phiStmt, block) :-
  *  Function-discovery outputs to visualization scripts
  ***********/
 
-.output IRFunctionCall
-.output IRFunctionCallReturn
-.output IRFunction_Return
-.output IsFunctionEntry(IO="file", filename="Function.csv", delimiter="\t")
+.output IRFunctionCall(IO="file", filename="CallGraphEdge.csv", delimiter="\t")
+.output IRFunctionCallReturn(IO="file", filename="FunctionCallReturn.csv", delimiter="\t")
+.output IRFunction_Return(IO="file", filename="FunctionEntry.csv", delimiter="\t")
+.output IsFunctionEntry(IO="file", filename="IsFunction.csv", delimiter="\t")
 
 .decl FormalArgs(func:IRFunction, var:TACVariable, n:number)
 .output FormalArgs
@@ -239,11 +243,11 @@ ActualReturnArgs(caller, var_rep, n) :-
 
 .output LocalBlockEdge
 .output HighLevelFunctionName
-.output IRFallthroughEdge
+.output IRFallthroughEdge(IO=file, filename="FallthroughEdge.csv", delimiter="\t")
 
 .output Mask_Length
 .output IRInFunction(IO="file", filename="InFunction.csv", delimiter="\t")
-.output IRFunctionEntry
+.output IRFunctionEntry(IO="file", filename="FunctionEntry.csv", delimiter="\t")
 
 /*****
  *  Statement Ordering
@@ -261,7 +265,7 @@ PRE_TAC_Statement_Next(stmt, nextnext) :-
 
 /// WARNING: This only works intra-procedurally after the Functional IR conversion.
 .decl TAC_Statement_Next(stmt: IRStatement, next: IRStatement)
-.output TAC_Statement_Next
+.output TAC_Statement_Next(IO=file, filename="Statement_Next.csv", delimiter="\t")
 
 TAC_Statement_Next(irstmt, irnext) :-
    PRE_TAC_Statement_Next(stmt, next),
@@ -295,9 +299,11 @@ TAC_Statement_OriginalStatement(irstmt, stmt_nexthead) :-
   stmt_nexthead = as(block_next, Statement).
 
 .output TAC_Statement_OriginalStatement
+.output TAC_Statement_OriginalStatement(IO=file, filename="Statement_OriginalStatement.csv", delimiter="\t")
+
 
 .decl TAC_OriginalStatement_Block(original_stmt: Statement, irblock: IRBlock)
-.output TAC_OriginalStatement_Block
+.output TAC_OriginalStatement_Block(IO=file, filename="OriginalStatement_Block.csv", delimiter="\t")
 
 // unmodified statements
 TAC_OriginalStatement_Block(stmt, irblock) :-
@@ -323,7 +329,7 @@ TAC_OriginalStatement_Block(stmt, irblock) :-
   Block_IRBlock(genBlock, _, irblock).
 
 .decl TAC_Block_CodeChunkAccessed(irblock: IRBlock, chunk_id: Chunk)
-.output TAC_Block_CodeChunkAccessed
+.output TAC_Block_CodeChunkAccessed(IO=file, filename="Block_CodeChunkAccessed.csv", delimiter="\t")
 
 TAC_Block_CodeChunkAccessed(irblock, chunk_id) :-
   Statement_CodeChunkAccessed(stmt, chunk_id),
@@ -335,7 +341,7 @@ IRBlock_PartialGas(irblock, stmt, gas) :-
   preTrans.Statement_Gas(stmt, gas).
   
 .decl TAC_Block_Gas(block: IRBlock, gas: number)
-.output TAC_Block_Gas
+.output TAC_Block_Gas(IO=file, filename="Block_Gas.csv", delimiter="\t")
 
 TAC_Block_Gas(block, totalgas) :-
    IRStatement_Block(_, block),

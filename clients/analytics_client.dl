@@ -86,7 +86,7 @@ Analytics_DataFlowsToSamePublicFunction(a, b) :-
    IsPublicFunction(f).
 
 .decl StmtMissingOperand(s: Statement)
-.input StmtMissingOperand(IO="file", filename="Analytics_StmtMissingOperand.csv", delimiter="\t")
+INPUT_RELATION(StmtMissingOperand)
 
 .decl Analytics_MissingDataFlowsToSamePublicFunction(a: Variable, b: Variable)
 .output Analytics_MissingDataFlowsToSamePublicFunction
@@ -133,7 +133,6 @@ Analytics_LargestFunction(f, b) :- InFunction(b, f), !FunctionIsNotLargest(f).
 
 Analytics_Variables(a) :-
    isVariable(a).
-
 
 
 // Has many dependencies, incl memory modeling and data structures
