@@ -374,6 +374,7 @@ def compile_datalog(spec, executable):
         log(f"Found cached executable for {spec}")
     else:
         log(f"Compiling {spec} to C++ program and executable")
+
         compilation_command = [
             args.souffle_bin,
             "-M",
