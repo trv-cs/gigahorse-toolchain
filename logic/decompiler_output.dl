@@ -224,7 +224,7 @@ TAC_Block(phiStmt, block) :-
 
 .output IRFunctionCall(IO="file", filename="CallGraphEdge.csv", delimiter="\t")
 .output IRFunctionCallReturn(IO="file", filename="FunctionCallReturn.csv", delimiter="\t")
-.output IRFunction_Return(IO="file", filename="FunctionEntry.csv", delimiter="\t")
+.output IRFunction_Return // this isn't read anywhere
 .output IsFunctionEntry(IO="file", filename="IsFunction.csv", delimiter="\t")
 
 .decl FormalArgs(func:IRFunction, var:TACVariable, n:number)

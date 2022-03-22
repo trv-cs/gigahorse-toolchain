@@ -220,7 +220,6 @@ class InstructionTsvExporter(Exporter):
             return os.path.join(output_dir, filename)
 
         def generate(filename, entries):
-            print(f"Writing to file {os.path.join(output_dir, filename)}")
             with open(os.path.join(output_dir, filename), "w") as f:
                 writer = csv.writer(f, delimiter="\t", lineterminator="\n")
                 writer.writerows(entries)
